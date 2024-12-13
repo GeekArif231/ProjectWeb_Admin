@@ -17,10 +17,12 @@ class GedungController extends Controller
         return view('gedungs.index', compact('gedungs', 'user_type'));
     }
 
+
     // Menampilkan detail gedung berdasarkan ID
     public function show($id)
     {
-        // $gedung = Gedung::where('is_available', true)->findOrFail($id);
+        // $gedung = Gedung::where('is_available', true, false)->findOrFail($id);
+        $gedung = Gedung::withTrashed()->findOrFail($id);
         return view('gedungs.show', compact('gedung'));
     }
 
@@ -105,5 +107,23 @@ class GedungController extends Controller
 
         return redirect()->route('gedung.index')->with('success', 'Gedung berhasil diperbarui.');
     }
+
+    public function destroy(Request $request)
+    {
+        // Validasi bahwa id gedung ada dalam request
+        $request->validate([
+            'id' => 'required|exists:gedung,id',
+        ]);
+
+        // Mencari gedung berdasarkan ID yang diberikan
+        $gedung = Gedung::findOrFail($request->id);
+
+        // Melakukan soft delete (mengisi kolom deleted_at)
+        $gedung->delete();
+
+        // Mengarahkan ke halaman sebelumnya dengan pesan sukses
+        return redirect()->route('gedung.index')->with('status', 'Gedung berhasil dihapus.');
+    }
+
 }
 

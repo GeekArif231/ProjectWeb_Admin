@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GedungController;
 use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\PenyewaanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,10 +30,14 @@ Route::get('/gedung/{id}', [GedungController::class, 'show'])->name('gedung.show
 
 Route::get('/gedung/{id}/edit', [GedungController::class, 'edit'])->name('gedungs.edit');
 Route::put('/gedung/{id}', [GedungController::class, 'update'])->name('gedungs.update');
+Route::post('/gedung/delete', [GedungController::class, 'destroy'])->name('gedung.delete');
 
 // Route::get('/gedung/created', [GedungController::class, '#'])->name('gedungs.buat');
 Route::get('/gedungs/created', [GedungController::class, 'create'])->name('gedungs.create');
 // Route::get('/test', [GedungController::class, 'create']);
+
+Route::get('/penyewaan/pending', [PenyewaanController::class, 'pending'])->name('penyewaan.pending');
+Route::post('/penyewaan/update-status', [PenyewaanController::class, 'updateStatus'])->name('penyewaan.updateStatus');
 
 Route::get('/riwayat-penyewaan', [RiwayatController::class, 'index'])->name('riwayat.index');
 

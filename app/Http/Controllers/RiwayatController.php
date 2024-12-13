@@ -9,10 +9,13 @@ class RiwayatController extends Controller
 {
     public function index()
     {
-        $riwayats = Riwayat::whereHas('penyewaan', function ($query) {
-            $query->whereIn('confirmed_status', ['confirmed', 'rejected']);
-        })->with(['penyewaan.gedung', 'penyewaan.user'])->get();
-    
+        // $riwayats = Riwayat::with('penyewaan.gedung')->get();  // Memuat relasi gedung
+        $riwayats = Riwayat::with(['penyewaan.gedung' => function($query) {
+            $query->withTrashed(); // Menyertakan gedung yang dihapus
+        }])->get();
+
         return view('riwayat.index', compact('riwayats'));
+        // $riwayat = Riwayat::with('penyewaan.gedung', 'penyewaan.user')->get();
+        // return view('riwayat.index', compact('riwayat'));
     }
 }

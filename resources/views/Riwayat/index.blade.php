@@ -27,31 +27,63 @@
                         </thead>
                         <tbody>
                             @forelse ($riwayats as $index => $riwayat)
-                                <tr>
-                                    <td class="px-4 py-2 border text-center">{{ $index + 1 }}</td>
-                                    <td class="px-4 py-2 border">{{ $riwayat->penyewaan->gedung->nama_gedung }}</td>
-                                    <td class="px-4 py-2 border">{{ $riwayat->penyewaan->user->nama }}</td>
-                                    <td class="px-4 py-2 border">Rp {{ number_format($riwayat->total_harga_sewa, 0, ',', '.') }}</td>
-                                    <td class="px-4 py-2 border text-center">
-                                        @if ($riwayat->penyewaan->confirmed_status === 'confirmed')
-                                            <span class="text-green-600 font-semibold">Terverifikasi</span>
-                                        @elseif ($riwayat->penyewaan->confirmed_status === 'rejected')
-                                            <span class="text-red-600 font-semibold">Dibatalkan</span>
+                            <tr>
+                                <td class="px-4 py-2 border text-center">{{ $index + 1 }}</td>
+                                
+                                <!-- Memastikan gedung ada atau tidak -->
+                                <td class="px-4 py-2 border">
+                                    @if($riwayat->penyewaan->gedung)
+                                        @if($riwayat->penyewaan->gedung->trashed())
+                                            <span class="text-yellow-500">Gedung (Dihapus): {{ $riwayat->penyewaan->gedung->nama_gedung }}</span>
+                                        @else
+                                            {{ $riwayat->penyewaan->gedung->nama_gedung }}
                                         @endif
-                                    </td>
-                                    <td class="px-4 py-2 border">{{ $riwayat->penyewaan->tanggal_mulai }}</td>
-                                    <td class="px-4 py-2 border">{{ $riwayat->penyewaan->tanggal_selesai }}</td>
-                                    <td class="px-4 py-2 border text-center">
-                                        '{{ $riwayat->penyewaan->detail_acara }}'
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8" class="text-center text-gray-500 py-4">
-                                        Tidak ada data riwayat penyewaan yang tersedia.
-                                    </td>
-                                </tr>
-                            @endforelse
+                                    @else
+                                        <span class="text-red-500">Gedung tidak tersedia</span>
+                                    @endif
+                                </td>                                
+                                
+                                <!-- Memastikan user ada atau tidak -->
+                                <td class="px-4 py-2 border">
+                                    @if($riwayat->penyewaan->user)
+                                        {{ $riwayat->penyewaan->user->nama }}
+                                    @else
+                                        <span class="text-red-500">Pengguna tidak ditemukan</span>
+                                    @endif
+                                </td>
+
+                                <td class="px-4 py-2 border">Rp {{ number_format($riwayat->total_harga_sewa, 0, ',', '.') }}</td>
+
+                                <td class="px-4 py-2 border text-center">
+                                    @if ($riwayat->penyewaan->confirmed_status === 'confirmed')
+                                        <span class="text-green-600 font-semibold">Terverifikasi</span>
+                                    @elseif ($riwayat->penyewaan->confirmed_status === 'rejected')
+                                        <span class="text-red-600 font-semibold">Dibatalkan</span>
+                                    @else
+                                        <span class="text-gray-500">Menunggu Konfirmasi</span>
+                                    @endif
+                                </td>
+
+                                <td class="px-4 py-2 border">{{ $riwayat->penyewaan->tanggal_mulai }}</td>
+                                <td class="px-4 py-2 border">{{ $riwayat->penyewaan->tanggal_selesai }}</td>
+
+                                <!-- Memastikan detail acara tidak null -->
+                                <td class="px-4 py-2 border text-center">
+                                    @if($riwayat->penyewaan->detail_acara)
+                                        {{ $riwayat->penyewaan->detail_acara }}
+                                    @else
+                                        <span class="text-gray-500">Detail acara tidak tersedia</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="text-center text-gray-500 py-4">
+                                    Tidak ada data riwayat penyewaan yang tersedia.
+                                </td>
+                            </tr>
+                        @endforelse
+
                         </tbody>
                     </table>
                 </div>

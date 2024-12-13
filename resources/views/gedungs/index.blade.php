@@ -24,14 +24,23 @@
                                         <p class="text-sm text-gray-500">Harga: Rp {{ number_format($gedung->harga_internal, 0, ',', '.') }}</p>
 
                                         <div class="mt-4 text-center">
-                                            <a href="{{route('gedung.show', $gedung->id) }}" class="text-white bg-blue-500 px-4 py-2 rounded-full hover:bg-blue-600 transition-colors">Lihat Detail</a>
+                                            <a href="{{ route('gedung.show', $gedung->id) }}" class="text-white bg-blue-500 px-4 py-2 rounded-full hover:bg-blue-600 transition-colors">Lihat Detail</a>
+                                            
+                                            <!-- Form Hapus Gedung -->
+                                            <form action="{{ route('gedung.delete') }}" method="POST" class="mt-2">
+                                                @csrf
+                                                @method('POST')
+                                                <input type="hidden" name="id" value="{{ $gedung->id }}">
+                                                <button type="submit" class="text-white bg-red-500 px-4 py-2 rounded-full hover:bg-red-600 transition-colors">
+                                                    Hapus Gedung
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
 
-                        <!-- Tampilkan pesan jika tidak ada gedung -->
                         @if($gedungs->isEmpty())
                             <p class="text-center text-gray-500">Belum ada gedung yang tersedia.</p>
                         @endif
