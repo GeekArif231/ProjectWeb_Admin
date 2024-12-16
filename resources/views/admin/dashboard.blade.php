@@ -4,78 +4,108 @@
             {{ __('Dashboard Admin') }}
         </h2>
     </x-slot>
-@section('content')
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                <!-- Melihat Daftar Gedung -->
-                <div class="bg-white border rounded-lg p-4 shadow-lg">
-                    <a href="{{ route('gedung.index') }}" class="text-lg font-semibold text-gray-800 hover:text-blue-600">
-                        Melihat Daftar Gedung
-                    </a>
-                    <p class="text-gray-500 mt-2">Lihat semua gedung yang tersedia beserta detailnya.</p>
+
+    @section('content')
+    <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Content Area -->
+        <div class="content-area bg-gray-100 p-6 rounded-lg shadow-lg w-full">
+
+            <!-- Topbar -->
+            <div class="topbar bg-white shadow-md flex justify-between p-4 mb-6 rounded-lg">
+                <div class="greeting">
+                    <h3 class="font-sans font-medium text-2xl text-gray-800">Selamat datang, Admin</h3>
+                    <span id="currentDate" class="text-gray-600 text-sm"></span>
                 </div>
+            </div>
 
-                <!-- Mencari Gedung -->
-                <div class="bg-white border rounded-lg p-4 shadow-lg">
-                    <a href="{{ '#' }}" class="text-lg font-semibold text-gray-800 hover:text-blue-600">
-                        Mencari Gedung
-                    </a>
-                    <p class="text-gray-500 mt-2">Cari gedung berdasarkan nama atau filter.</p>
+            <!-- Overview -->
+            <div class="overview grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                <!-- Total Gedung Tersedia -->
+                <div class="card bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+                    <h4 class="font-semibold text-gray-700 text-lg">Total Gedung Tersedia</h4>
+                    <p class="text-3xl font-bold text-red-600">{{ $totalGedung }}</p>
                 </div>
-
-                <!-- Melihat Ketersediaan Gedung -->
-                <div class="bg-white border rounded-lg p-4 shadow-lg">
-                    <a href="{{ '#' }}" class="text-lg font-semibold text-gray-800 hover:text-blue-600">
-                        Melihat Ketersediaan Gedung
-                    </a>
-                    <p class="text-gray-500 mt-2">Periksa ketersediaan gedung menggunakan kalender.</p>
+            
+                <!-- Total Penyewa Aktif -->
+                <div class="card bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+                    <h4 class="font-semibold text-gray-700 text-lg">Total Penyewaan</h4>
+                    <p class="text-3xl font-bold text-red-600">{{ $totalPenyewaAktif }}</p>
                 </div>
+            
+                <!-- Penyewaan Terbaru -->
+                <div class="card bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+                    <h4 class="font-semibold text-gray-700 text-lg">Penyewaan Terbaru</h4>
+                    @if($penyewaanTerbaru && $penyewaanTerbaru->gedung && $penyewaanTerbaru->user)
+                        <p class="text-gray-600">{{ $penyewaanTerbaru->gedung->nama_gedung }} - {{ $penyewaanTerbaru->user->nama }}</p>
+                    @else
+                        <p class="text-gray-600">Tidak ada penyewaan yang dikonfirmasi.</p>
+                    @endif
+                </div>                                 
+            </div>
 
-                <!-- Membatalkan Jadwal Penyewaan -->
-                <div class="bg-white border rounded-lg p-4 shadow-lg">
-                    <a href="{{'#'}}" class="text-lg font-semibold text-gray-800 hover:text-blue-600">
-                        Membatalkan Jadwal Penyewaan
-                    </a>
-                    <p class="text-gray-500 mt-2">Batalkan penyewaan yang belum atau sudah dikonfirmasi.</p>
-                </div>
-
-                <!-- Menambah Data Gedung -->
-                <div class="bg-white border rounded-lg p-4 shadow-lg">
-                    <a href="{{ route('gedungs.create') }}" class="text-lg font-semibold text-gray-800 hover:text-blue-600">
-                        Menambah Data Gedung
-                    </a>
-                    <p class="text-gray-500 mt-2">Tambahkan gedung baru ke dalam sistem.</p>
-                </div>
-
-                <!-- Mengedit Data Gedung -->
-                <div class="bg-white border rounded-lg p-4 shadow-lg">
-                        @foreach ($gedungs as $gedung)
-                        @endforeach
-                        <a href="{{ route('gedungs.edit', $gedung->id) }}" class="text-lg font-semibold text-gray-800 hover:text-blue-600">
-                            Mengedit Data Gedung
-                        </a>
-                        <p class="text-gray-500 mt-2">Edit informasi gedung yang sudah ada.</p>
-                    </div>
-
-                <!-- Konfirmasi Jadwal Penyewaan -->
-                <div class="bg-white border rounded-lg p-4 shadow-lg">
-                    <a href="{{'#' }}" class="text-lg font-semibold text-gray-800 hover:text-blue-600">
-                        Konfirmasi Jadwal Penyewaan
-                    </a>
-                    <p class="text-gray-500 mt-2">Konfirmasi atau tolak penyewaan yang diajukan customer.</p>
-                </div>
-
-                <!-- Melihat Riwayat Penyewaan -->
-                <div class="bg-white border rounded-lg p-4 shadow-lg">
-                    <a href="{{ route('riwayat.index') }}" class="text-lg font-semibold text-gray-800 hover:text-blue-600">
-                        Melihat Riwayat Penyewaan
-                    </a>
-                    <p class="text-gray-500 mt-2">Lihat riwayat penyewaan yang telah dilakukan.</p>
+            <!-- Charts -->
+            <div class="charts mt-6">
+                <div class="chart bg-white rounded-lg shadow-md p-6">
+                    <h4 class="text-lg font-semibold text-gray-700">Grafik Penyewaan Bulanan</h4>
+                    <canvas id="barChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
     @endsection
 </x-app-layout>
+
+<script>
+    // JavaScript untuk menampilkan tanggal dinamis
+    document.addEventListener("DOMContentLoaded", function () {
+        const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+        const months = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+
+        const now = new Date();
+        const day = days[now.getDay()];
+        const date = now.getDate();
+        const month = months[now.getMonth()];
+        const year = now.getFullYear();
+
+        const formattedDate = `${day}, ${date} ${month} ${year}`;
+        document.getElementById("currentDate").innerText = formattedDate;
+    });
+
+    const confirmedData = @json($confirmedData);
+    const rejectedData = @json($rejectedData);
+    const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    const ctx = document.getElementById('barChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Confirmed',
+                    data: confirmedData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)', // Biru
+                },
+                {
+                    label: 'Rejected',
+                    data: rejectedData,
+                    backgroundColor: 'rgba(255, 99, 132, 0.7)', // Merah
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: { mode: 'index', intersect: false },
+            },
+            scales: {
+                x: { stacked: true },
+                y: { stacked: true, beginAtZero: true },
+            }
+        }
+    });
+</script>

@@ -15,7 +15,7 @@ class PenyewaanSeeder extends Seeder
             'detail_acara' => 'Seminar Teknologi Informasi',
             'tanggal_mulai' => '2024-12-01',
             'tanggal_selesai' => '2024-12-01',
-            'confirmed_status' => 'pending'
+            'confirmed_status' => 'confirmed'
         ]);
 
         Penyewaan::create([
@@ -25,6 +25,14 @@ class PenyewaanSeeder extends Seeder
             'tanggal_mulai' => '2024-12-04',
             'tanggal_selesai' => '2024-12-04',
             'confirmed_status' => 'confirmed'
+        ]);
+        Penyewaan::create([
+            'id_user' => 1,
+            'gedung_id' => 2,
+            'detail_acara' => 'Seminar Nasional',
+            'tanggal_mulai' => '2024-12-10',
+            'tanggal_selesai' => '2024-12-11',
+            'confirmed_status' => 'pending'
         ]);
     }
 }

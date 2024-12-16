@@ -9,6 +9,7 @@
     <script defer src="https://unpkg.com/alpinejs@3.10.2/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <!-- page -->
@@ -55,29 +56,56 @@
 
     <div class="flex">
         <!-- aside -->
-        <aside class="flex w-72 flex-col space-y-2 border-r-2 border-gray-200 bg-white p-2" style="height: 90.5vh"
-            x-show="asideOpen">
-            <a href="{{ route('dashboard') }}" class="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
+        <aside class="flex w-72 flex-col space-y-2 border-r-2 border-gray-200 bg-white p-2" style="height: 90.5vh" x-show="asideOpen">
+            <!-- Dashboard -->
+            <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
                 <span class="text-2xl"><i class="bx bx-home"></i></span>
-                <span>Beranda</span>
+                <span>Dashboard</span>
             </a>
-
-            <a href="#" class="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
-                <span class="text-2xl"><i class="bx bx-cart"></i></span>
-                <span>Penyewaan</span>
+            
+            <!-- Gedung -->
+            <a href="{{ route('gedung.index') }}" class="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
+                <span class="text-2xl"><i class="bx bx-building-house"></i></span>
+                <span>Gedung</span>
             </a>
-
-            <a href="#" class="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
-                <span class="text-2xl"><i class="bx bx-shopping-bag"></i></span>
-                <span>Riwayat Penyewaan</span>
+    
+            <!-- Penyewa -->
+            {{-- <a href="{{ route('penyewaan.pending') }}" class="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
+                <span class="text-2xl"><i class="bx bx-user"></i></span>
+                <span>Penyewa</span>
+            </a> --}}
+    
+            <!-- Jadwal Sewa -->
+            <a href="{{ route('penyewaan.pending') }}" class="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
+                <span class="text-2xl"><i class="bx bx-calendar"></i></span>
+                <span>Jadwal Sewa</span>
             </a>
+    
+            <!-- Riwayat Penyewaan -->
+            <a href="{{ route('riwayat.index') }}" class="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
+                <span class="text-2xl"><i class="bx bx-history"></i></span>
+                <span>Riwayat Sewa</span>
+            </a>
+    
+            <!-- Laporan -->
+            {{-- <a href="{{ '#' }}" class="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
+                <span class="text-2xl"><i class="bx bx-file"></i></span>
+                <span>Laporan</span>
+            </a> --}}
+    
+            <!-- Pengaturan -->
+            {{-- <a href="{{'#'}}" class="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
+                <span class="text-2xl"><i class="bx bx-cog"></i></span>
+                <span>Pengaturan</span>
+            </a> --}}
         </aside>
-
+    
         <!-- main content page -->
         <div class="w-full p-4">
             @yield('content')
         </div>
     </div>
+    
     <!-- footer -->
     @include('layouts.footer')
 </main>
